@@ -1,0 +1,46 @@
+stats-gui:
+  title: "&ѕᴛᴀᴛѕ"
+  size: 27
+
+  items:
+    head:
+      slot: 4
+      material: PLAYER_HEAD
+      name: "&#8094fb&lPROFILE"
+      lore:
+        - "&fName: &#8094fb%player_name%"
+
+    rank:
+      slot: 11
+      material: BOOK
+      name: "&#09ABF6&lRANK"
+      lore:
+        - "&#09ABF6• &f%player_name%'s rank: %luckperms_prefix%"
+
+    kills:
+      slot: 12
+      material: END_CRYSTAL
+      name: "&c&lKILLS"
+      lore:
+        - "&c• &fKills: %statistic_player_kills%"
+
+    deaths:
+      slot: 13
+      material: SKELETON_SKULL
+      name: "&#666666&lDEATHS"
+      lore:
+        - "&#666666• &f%player_name%'s Deaths: %statistic_deaths%"
+
+    balance:
+      slot: 14
+      material: PAPER
+      name: "&#05ff00&lBALANCE"
+      lore:
+        - "&#05ff00• &f%vault_eco_balance_formatted%$"
+
+    playtime:
+      slot: 15
+      material: CLOCK
+      name: "&7&lPLAYTIME"
+      lore:
+        - "&7• &f%statistic_time_played:days%d %statistic_time_played:hours%h %statistic_time_played:minutes%m"

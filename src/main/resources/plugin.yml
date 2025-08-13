@@ -1,4 +1,8 @@
 name: StaticStats
-version: '1.0'
+version: '${version}'
 main: net.kai.staticstats.StaticStats
 api-version: '1.21'
+authos: [ StaticStudios, C0dingKai ]
+softdepend: [PlaceholderAPI]
+commands:
+  stats:
