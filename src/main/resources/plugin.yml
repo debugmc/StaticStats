@@ -1,0 +1,4 @@
+name: StaticStats
+version: '1.0'
+main: net.kai.staticstats.StaticStats
+api-version: '1.21'
