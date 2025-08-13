@@ -1,4 +1,4 @@
-package net.kai.staticstats.utility;
+package org.staticstudios.utility;
 
 import net.md_5.bungee.api.ChatColor;
 

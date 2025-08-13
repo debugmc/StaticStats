@@ -1,0 +1,19 @@
+###############################################################################
+# StaticStats — Messages file
+#
+# Customize all player-facing strings here. All strings support your Hex color
+# codes (like '&#1DA2FB') and the ColorUtil colorization used throughout.
+#
+# After changing this file run: /stats reload
+###############################################################################
+
+
+messages:
+  prefix: "&#55FB00&lSTATS &7➠ "
+  no-permission: "&cYou don't have permission to use this."
+  no-permission-others: "&cYou don't have permission to set other players' stats."
+  usage: "&cUsage: /setstats <player> <stat> <value>"
+  player-not-found: "&cPlayer not found."
+  invalid-number: "&cInvalid number: %value%"
+  stat-set: "&7Set &#55FB00%stat% &7for &#55FB00%player% &7to &#55FB00%value%."
+  reload: "&aThe configuration has been reloaded."

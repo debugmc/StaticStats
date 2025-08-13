@@ -1,8 +1,15 @@
 name: StaticStats
 version: '${version}'
-main: net.kai.staticstats.StaticStats
+main: org.staticstudios.StaticStats
 api-version: '1.21'
-authos: [ StaticStudios, C0dingKai ]
+authors: [ StaticStudios ]
 softdepend: [PlaceholderAPI]
+description: "StaticStats — Lightweight, high-performance player statistics plugin (GUI + commands). Minimal footprint, PlaceholderAPI compatible."
 commands:
   stats:
+    description: "Open the stats GUI or reload configuration"
+    usage: "/stats [player|reload]"
+
+  setstats:
+    description: "Set player statistics"
+    usage: "/setstats <player> <stat> <value>"

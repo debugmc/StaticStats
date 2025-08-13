@@ -1,8 +1,40 @@
-stats-gui:
-  title: "&ѕᴛᴀᴛѕ"
-  size: 27
+###############################################################################
+# StaticStats — Main configuration
+#
+# Lightweight, fast, and easy-to-configure statistics GUI & commands.
+# - Use /stats to open the GUI or /stats reload to apply changes made to
+#   config.yml and messages.yml without restarting the server.
+# - The GUI is fully configurable under the 'stats-gui' section.
+# - Permissions are configurable under 'permissions' or 'commands' sections.
+#
+# THANK YOU NOTE:
+# Thank you for using StaticStats! Your support helps keep this plugin
+# lightweight and maintained. If you want Vault or persistence features, add
+# them via the plugin options (or request via the dev).
+#
+# Quick tips:
+# - Edit messages in messages.yml (recommended) instead of directly changing
+#   text used by the plugin in code.
+# - After editing config.yml or messages.yml run: /stats reload
+###############################################################################
 
+permissions:
+  stats:
+    permission: "stats.use"
+    reload-permission: "stats.reload"
+  setstats:
+    permission: "stats.set"
+    others-permission: "stats.set.others"
+
+stats-gui:
+  title: "ѕᴛᴀᴛѕ"
+  size: 27
   items:
+    fill:
+      material: GRAY_STAINED_GLASS_PANE
+      name: "&r"
+      lore: []
+
     head:
       slot: 4
       material: PLAYER_HEAD
@@ -22,7 +54,7 @@ stats-gui:
       material: END_CRYSTAL
       name: "&c&lKILLS"
       lore:
-        - "&c• &fKills: %statistic_player_kills%"
+        - "&c• &f%player_name%'s Kills: %statistic_player_kills%"
 
     deaths:
       slot: 13
