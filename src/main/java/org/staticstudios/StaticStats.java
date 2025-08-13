@@ -4,6 +4,7 @@ import org.staticstudios.commands.SetStatsCommand;
 import org.staticstudios.commands.StatsCommand;
 import org.staticstudios.manager.StatsManager;
 import org.staticstudios.menu.StatsMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +25,15 @@ public final class StaticStats extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         loadMessages();
+
+        Bukkit.getConsoleSender().sendMessage("");
+        Bukkit.getConsoleSender().sendMessage("§r");
+        Bukkit.getConsoleSender().sendMessage("§7Thanks for downloading §aStatic Stats§7.");
+        Bukkit.getConsoleSender().sendMessage("§7This plugin is free to use.");
+        Bukkit.getConsoleSender().sendMessage("");
+        Bukkit.getConsoleSender().sendMessage("§7Server IP: §f" + Bukkit.getIp());
+        Bukkit.getConsoleSender().sendMessage("§7Server Port: §f" + Bukkit.getPort());
+        Bukkit.getConsoleSender().sendMessage("§r");
 
         statsManager = new StatsManager();
         statsMenu = new StatsMenu(this);

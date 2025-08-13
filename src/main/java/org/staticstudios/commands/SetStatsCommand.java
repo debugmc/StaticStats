@@ -5,12 +5,12 @@ import org.staticstudios.manager.StatsManager;
 import org.staticstudios.utility.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,6 +24,7 @@ public final class SetStatsCommand implements CommandExecutor, TabCompleter {
     static {
         ALIASES.put("kills", "PLAYER_KILLS");
         ALIASES.put("player_kills", "PLAYER_KILLS");
+        ALIASES.put("pvp_kills", "PLAYER_KILLS");
         ALIASES.put("deaths", "DEATHS");
         ALIASES.put("playtime", "PLAY_ONE_MINUTE");
         ALIASES.put("time_played", "PLAY_ONE_MINUTE");
@@ -59,8 +60,6 @@ public final class SetStatsCommand implements CommandExecutor, TabCompleter {
         ALIASES.put("interact", "INTERACT");
         ALIASES.put("interact_at_entity", "INTERACT_AT_ENTITY");
         ALIASES.put("kill_entity", "KILL_ENTITY");
-        ALIASES.put("pvp_kills", "PLAYER_KILLS");
-        ALIASES.put("pve_kills", "MOB_KILLS");
         ALIASES.put("time_since_death", "TIME_SINCE_DEATH");
         ALIASES.put("use_cake_slice", "USE_CAKE");
         ALIASES.put("sleep_in_bed", "SLEEP_IN_BED");
@@ -112,13 +111,13 @@ public final class SetStatsCommand implements CommandExecutor, TabCompleter {
         String statKey = args[1].toLowerCase(Locale.ROOT);
         String valueStr = args[2];
 
-        OfflinePlayer targetOff = Bukkit.getOfflinePlayer(targetName);
-        if (targetOff == null || targetOff.getName() == null) {
-            sender.sendMessage(prefix + ColorUtil.color(msg("player-not-found", "&cPlayer not found.")));
+        Player onlineTarget = Bukkit.getPlayerExact(targetName);
+        if (onlineTarget == null) {
+            sender.sendMessage(prefix + ColorUtil.color(msg("player-offline", "&cThat player is not online. Stats can only be set while the player is online.")));
             return true;
         }
 
-        boolean isOther = !(sender instanceof Player p && p.getName().equalsIgnoreCase(targetOff.getName()));
+        boolean isOther = !(sender instanceof Player p && p.getName().equalsIgnoreCase(onlineTarget.getName()));
         if (isOther && !sender.hasPermission(othersPerm)) {
             sender.sendMessage(prefix + ColorUtil.color(msg("no-permission-others", "&cYou cannot set other players' stats.")));
             return true;
@@ -139,20 +138,46 @@ public final class SetStatsCommand implements CommandExecutor, TabCompleter {
         }
 
         if (statKey.equals("balance")) {
-            setBalance(targetOff, valueDouble);
-            sender.sendMessage(prefix + ColorUtil.color(msg("stat-set", "&aSet %stat% for %player% to %value%"))
-                    .replace("%stat%", "balance")
-                    .replace("%player%", targetOff.getName())
-                    .replace("%value%", String.valueOf(valueDouble)));
+            sender.sendMessage(prefix + ColorUtil.color(msg("cannot-set-offline-balance", "&cBalance must be changed via Vault/Economy plugin.")));
             return true;
         }
 
         if (statKey.equals("kd")) {
-            setKd(targetOff, valueDouble);
+            setKd(onlineTarget, valueDouble);
             sender.sendMessage(prefix + ColorUtil.color(msg("stat-set", "&aSet %stat% for %player% to %value%"))
                     .replace("%stat%", "kd")
-                    .replace("%player%", targetOff.getName())
+                    .replace("%player%", onlineTarget.getName())
                     .replace("%value%", String.valueOf(valueDouble)));
+            return true;
+        }
+
+        int safeVal = (int) Math.max(0, Math.min(Integer.MAX_VALUE, Math.floor(valueDouble)));
+
+        if (statKey.equals("kills") || statKey.equals("player_kills") || statKey.equals("pvp_kills")) {
+            try {
+                onlineTarget.setStatistic(Statistic.PLAYER_KILLS, safeVal);
+                sender.sendMessage(prefix + ColorUtil.color(msg("stat-set", "&aSet %stat% for %player% to %value%"))
+                        .replace("%stat%", "kills")
+                        .replace("%player%", onlineTarget.getName())
+                        .replace("%value%", String.valueOf(safeVal)));
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Failed to set PLAYER_KILLS for " + onlineTarget.getName() + ": " + ex.getMessage());
+                sender.sendMessage(prefix + ColorUtil.color(msg("stat-failed", "&cFailed to set statistic.")));
+            }
+            return true;
+        }
+
+        if (statKey.equals("deaths")) {
+            try {
+                onlineTarget.setStatistic(Statistic.DEATHS, safeVal);
+                sender.sendMessage(prefix + ColorUtil.color(msg("stat-set", "&aSet %stat% for %player% to %value%"))
+                        .replace("%stat%", "deaths")
+                        .replace("%player%", onlineTarget.getName())
+                        .replace("%value%", String.valueOf(safeVal)));
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Failed to set DEATHS for " + onlineTarget.getName() + ": " + ex.getMessage());
+                sender.sendMessage(prefix + ColorUtil.color(msg("stat-failed", "&cFailed to set statistic.")));
+            }
             return true;
         }
 
@@ -163,57 +188,35 @@ public final class SetStatsCommand implements CommandExecutor, TabCompleter {
         } catch (IllegalArgumentException ignored) {
         }
 
-        if (statistic != null && targetOff.isOnline()) {
-            Player online = (Player) targetOff;
+        if (statistic != null) {
             try {
-                int safeVal = (int) Math.max(0, Math.min(Integer.MAX_VALUE, Math.floor(valueDouble)));
-                online.setStatistic(statistic, safeVal);
+                onlineTarget.setStatistic(statistic, safeVal);
                 sender.sendMessage(prefix + ColorUtil.color(msg("stat-set", "&aSet %stat% for %player% to %value%"))
                         .replace("%stat%", statKey)
-                        .replace("%player%", online.getName())
+                        .replace("%player%", onlineTarget.getName())
                         .replace("%value%", String.valueOf(safeVal)));
                 return true;
-            } catch (Exception ignored) {
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Failed to set statistic " + statistic + " for " + onlineTarget.getName() + ": " + ex.getMessage());
+                sender.sendMessage(prefix + ColorUtil.color(msg("stat-failed", "&cFailed to set statistic.")));
+                return true;
             }
         }
 
-        saveStoredStat(targetOff.getUniqueId().toString(), statKey, valueDouble);
-
-        sender.sendMessage(prefix + ColorUtil.color(msg("stat-saved-offline", "&aSaved %stat% for %player% (will apply when available)."))
-                .replace("%stat%", statKey)
-                .replace("%player%", targetOff.getName()));
+        sender.sendMessage(prefix + ColorUtil.color(msg("unknown-stat", "&cUnknown statistic: %stat%")).replace("%stat%", statKey));
         return true;
     }
 
-    private void setBalance(OfflinePlayer target, double amount) {
-        plugin.getConfig().set("balances." + target.getUniqueId(), amount);
-        plugin.saveConfig();
-    }
-
-    private void setKd(OfflinePlayer target, double targetKd) {
+    private void setKd(Player p, double targetKd) {
         if (targetKd < 0) targetKd = 0;
-        if (target.isOnline()) {
-            Player p = (Player) target;
-            int kills = 0;
-            int deaths = 0;
-            try {
-                kills = p.getStatistic(Statistic.PLAYER_KILLS);
-                deaths = p.getStatistic(Statistic.DEATHS);
-            } catch (Exception ignored) {}
-            if (targetKd == 0) {
-                deaths = Math.max(0, kills);
-            } else {
-                deaths = (int) Math.max(0, Math.round(kills / targetKd));
-            }
-            try { p.setStatistic(Statistic.DEATHS, deaths); } catch (Exception ignored) {}
-        } else {
-            saveStoredStat(target.getUniqueId().toString(), "kd", targetKd);
-        }
-    }
-
-    private void saveStoredStat(String uuid, String key, double value) {
-        plugin.getConfig().set("stored-stats." + uuid + "." + key, value);
-        plugin.saveConfig();
+        int kills = 0;
+        try {
+            kills = p.getStatistic(Statistic.PLAYER_KILLS);
+        } catch (Exception ignored) {}
+        int deaths;
+        if (targetKd == 0) deaths = Math.max(0, kills);
+        else deaths = (int) Math.max(0, Math.round(kills / targetKd));
+        try { p.setStatistic(Statistic.DEATHS, deaths); } catch (Exception ignored) {}
     }
 
     @Override
