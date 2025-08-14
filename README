@@ -1,40 +1,42 @@
-# StaticStats - By Staticstudios
+# StaticStats - By StaticStudios
 
 **Lightweight & Efficient Player Statistics GUI Plugin for Minecraft (1.21+)**
 
-StaticStats allows server owners to display detailed player statistics through a clean and easy-to-use GUI.
-It integrates seamlessly with PlaceholderAPI to pull accurate and up-to-date data without heavy performance impact.
+StaticStats allows server owners to display detailed player statistics through a clean and easy-to-use GUI.  
+It integrates seamlessly with **PlaceholderAPI** to pull accurate and up-to-date data without heavy performance impact.
 
----
-
-## Features
-- Fully customizable configuration & messages.
+## ✨ Features
+- Fully customizable configuration and messages.
 - Supports over 50 PlaceholderAPI statistics.
 - Lightweight and optimized for performance.
 - Permission-based access control.
 - Custom prefix, reload messages, and GUI titles.
 - Simple command system with tab completion.
 
----
-
-## Installation
+## 📥 Installation
 1. Download the plugin `.jar` file.
 2. Place it inside your server's `plugins` folder.
 3. Restart your server.
 4. Edit `config.yml` and `messages.yml` to your liking.
 5. Reload the plugin with `/stats reload` or restart your server.
 
----
+## 📜 Commands & Permissions
 
-## Commands & Permissions
+| Command                      | Description                                  | Permission             |
+|------------------------------|----------------------------------------------|------------------------|
+| `/stats`                     | Opens your own statistics menu               | `stats.use`            |
+| `/stats <player>`            | View another player's statistics             | `stats.use`            |
+| `/stats reload`              | Reloads the plugin configuration & messages  | `stats.reload`         |
+| `/setstats <player> <stat>`  | Set a specific statistic for a player        | `stats.set.<stat>`     |
 
-| Command                      | Description                                 | Permission             |
-|------------------------------|---------------------------------------------|------------------------|
-| `/stats`                     | Opens your own statistics menu              | `stats.use`            |
-| `/stats <player>`            | View another player's statistics            | `stats.use`            |
-| `/stats reload`              | Reloads the plugin configuration & messages | `stats.reload`         |
-| `/setstats <player> <stat>`  | Set a specific statistic for a player       | `stats.set.<stat>`     |
+## ⚠ License & Usage
+- You must read the LICENSE file before using this plugin.
+- Editing, modifying, or redistributing the plugin without written permission is strictly prohibited.
+- You may use this plugin on any server you own or operate.
+- Selling or profiting from this plugin in any form is forbidden.
 
----
+## 📬 Support
+- Open a **GitHub Issue** for bug reports or suggestions.
+- Join our **Discord**: [Your Discord Invite]
 
-
+**Enjoy the plugin, follow the rules, and have fun! 🎮**
